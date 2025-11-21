@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Week 3 — Layouts: Sidebar, Product Card & Blog Flexbox</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site-wrapper">
+    <aside class="sidebar">
+      <div class="brand">Silent Shop</div>
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">© 2025 Silent</div>
+    </aside>
+
+    <main class="main">
+      <header class="hero">
+        <h1>Layouts — Sidebar, Box Model & Flexbox</h1>
+        <p class="lead">Responsive sidebar, a product card example, and a 3-column blog layout.</p>
+      </header>
+
+      <section id="products" class="section">
+        <h2>Featured Products</h2>
+        <div class="products-grid">
+          <article class="product-card">
+            <img src="https://via.placeholder.com/400x300?text=Product+Image" class="product-img" />
+            <div class="product-body">
+              <h3 class="product-title">Comfy Headphones</h3>
+              <p class="product-desc">Noise-cancelling over-ear headphones with long battery life.</p>
+              <div class="product-meta">
+                <span class="price">₹3,499</span>
+                <button class="btn buy">Buy Now</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <img src="https://via.placeholder.com/400x300?text=Product+2" class="product-img" />
+            <div class="product-body">
+              <h3 class="product-title">Smart Watch</h3>
+              <p class="product-desc">Water-resistant smartwatch with notifications.</p>
+              <div class="product-meta">
+                <span class="price">₹4,999</span>
+                <button class="btn buy alt">Add to Cart</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="blog" class="section">
+        <h2>From the Blog</h2>
+        <div class="blog-grid">
+          <article class="post">
+            <img src="https://via.placeholder.com/800x400?text=Post+1" class="post-img" />
+            <h3 class="post-title">Understanding the CSS Box Model</h3>
+            <p class="post-excerpt">Learn how margin, padding, borders, and content shape layouts.</p>
+            <a class="read-more" href="#">Read more →</a>
+          </article>
+
+          <article class="post">
+            <img src="https://via.placeholder.com/800x400?text=Post+2" class="post-img" />
+            <h3 class="post-title">Flexbox: Make Responsive Layouts</h3>
+            <p class="post-excerpt">Flexbox makes alignment and spacing easier than ever.</p>
+            <a class="read-more" href="#">Read more →</a>
+          </article>
+
+          <article class="post">
+            <img src="https://via.placeholder.com/800x400?text=Post+3" class="post-img" />
+            <h3 class="post-title">Sidebar Patterns for Modern Sites</h3>
+            <p class="post-excerpt">Explore sticky, collapsible, and off-canvas sidebar patterns.</p>
+            <a class="read-more" href="#">Read more →</a>
+          </article>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p>Built for Week 3 — Layouts. Fully responsive.</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
