@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kapil Patel — Cybersecurity Engineer & CTF Creator</title>
+  <style>
+    /* Base reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg,#0f172a 0%, #0b1220 55%, #0f172a 100%);
+      color: #e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding: 28px;
+    }
+
+    .wrap { max-width: 1100px; margin: 0 auto; }
+
+    header {
+      display:flex;
+      gap:20px;
+      align-items:center;
+      margin-bottom: 28px;
+    }
+    .avatar {
+      width:110px;height:110px;border-radius:20px;
+      background:linear-gradient(135deg,#1e293b,#334155);
+      display:flex;align-items:center;justify-content:center;
+      font-size:42px;box-shadow: 0 12px 30px rgba(2,6,23,0.6);
+      flex-shrink:0;
+    }
+    header h1 { font-size:28px; margin-bottom:6px; color:#fff; }
+    header p { opacity:0.85; color:#cfe3ff; }
+
+    .hero-meta { margin-left:8px; }
+    .tag { display:inline-block; padding:6px 10px; border-radius:999px; background:linear-gradient(90deg,#06b6d4,#7c3aed); color:white; font-weight:600; font-size:13px; margin-right:8px; }
+
+    main { display:grid; grid-template-columns: 1fr 380px; gap:28px; }
+    @media (max-width:980px){ main { grid-template-columns: 1fr; } .right-col { order: 2; } }
+
+    /* Cards / sections */
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius:14px; padding:20px; box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .card + .card { margin-top:18px; }
+    .card h2 { margin-bottom:12px; font-size:18px; color:#eaf2ff; }
+    .muted { color:#9fb1d6; font-size:14px; }
+
+    /* Skills / list */
+    .skills { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+    .skill { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.03); font-weight:600; font-size:13px; color:#dbeafe; }
+
+    ul.clean { list-style:none; padding-left:0; margin-top:10px; }
+    ul.clean li { padding:8px 0; border-bottom: 1px dashed rgba(255,255,255,0.03); color:#cfe3ff; font-size:14px; }
+    ul.clean li:last-child { border-bottom: none; }
+
+    .project-tag { display:inline-block; font-size:12px; padding:4px 8px; border-radius:6px; background:rgba(255,255,255,0.03); margin-left:8px; color:#dbeafe; }
+
+    /* Contact / links */
+    .links { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .btn {
+      display:inline-block; text-decoration:none; padding:10px 14px; border-radius:10px; font-weight:700;
+      background: linear-gradient(90deg,#7c3aed,#06b6d4); color:white;
+      box-shadow: 0 8px 20px rgba(28,28,80,0.35);
+    }
+    .ghost { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#cfe3ff; padding:9px 12px; border-radius:10px; text-decoration:none; font-weight:600; }
+
+    /* Timeline / experience */
+    .timeline { margin-top:8px; display:flex; flex-direction:column; gap:12px; }
+    .timeline .item { padding:12px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); }
+    .timeline .item strong { display:block; color:#eaf2ff; }
+
+    footer { margin-top:28px; text-align:center; color:#97b5db; font-size:13px; opacity:0.95; }
+
+    /* small helpers */
+    .small { font-size:13px; color:#9fb1d6; }
+    .badge { font-size:12px; padding:6px 8px; border-radius:6px; background:rgba(255,255,255,0.02); color:#dbeafe; margin-right:6px; }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="avatar">S</div>
+      <div class="hero-meta">
+        <h1>Silent <span style="opacity:0.8"> (Kapil)</span></h1>
+        <p class="muted">Cybersecurity Engineer • CTF Creator • eJPT v2 • Docker & Web Security</p>
+        <div style="margin-top:10px">
+          <span class="tag">Cyberonites Club — Technical Deputy Head</span>
+          <span class="tag" style="background:linear-gradient(90deg,#f97316,#ef4444)">CTF Maker</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Left / main column -->
+      <section class="left-col">
+        <div class="card">
+          <h2>About Me</h2>
+          <p class="small">I'm Silent (Kapil). I build realistic CTF challenges, secure web applications, and Dockerized labs used for hands-on learning and competitions. I have organised and led campus CTFs (Escalatex, Intrusion X Hackathon) and created multiple web and system-level challenges — from beginner-friendly puzzles to very hard request-smuggling and binary exploitation labs.</p>
+          <p class="small" style="margin-top:10px">Key focus areas: web security (LFI, RCE, file upload, log poisoning), exploitation (SUID, buffer overflow), CTF design, Docker deployments, and practical pentesting.</p>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Selected Projects & CTFs</h2>
+          <ul class="clean">
+            <li>
+              <strong>AsciiWhisper</strong>
+              <div class="small">A web CTF focused on ASCII decoding and logic puzzles — designed for beginner-to-medium players.</div>
+            </li>
+            <li>
+              <strong>ByteLabs Security Breach</strong>
+              <div class="small">Dockerized multi-service challenge used as a learning lab covering LFI, file uploads and privilege escalation.</div>
+            </li>
+            <li>
+              <strong>CrashCourier</strong>
+              <div class="small">A very-hard web challenge involving a vulnerable Apache module and User-Agent header buffer overflow.</div>
+            </li>
+            <li>
+              <strong>LogPoison</strong>
+              <div class="small">Chained file upload + log poisoning → LFI → remote code execution learning path.</div>
+            </li>
+            <li>
+              <strong>SilentCap, HoverLock, PolyglotUpload, RequestSplit, ExploitVault</strong>
+              <div class="small">Multiple challenges illustrating advanced techniques: request smuggling, polyglot uploads, CSRF token reuse, and multi-stage privilege escalation.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>CTF / Educational Work</h2>
+          <ul class="clean">
+            <li><strong>Organizer:</strong> Escalatex & Intrusion X Hackathon — designed tasks, infrastructure and scoring rules.</li>
+            <li><strong>Instructor:</strong> Prepared 30-day beginner-friendly ethical hacking module (1 hour daily).</li>
+            <li><strong>Content:</strong> Created walkthroughs, learning labs and challenge write-ups for students preparing for eJPT and other entry-level certs.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Experience & Roles</h2>
+          <div class="timeline">
+            <div class="item">
+              <strong>Technical Deputy Head — Cyberonites Club</strong>
+              <div class="small">Led the technical team, designed club CTFs, mentored juniors on pentesting and CTF techniques.</div>
+            </div>
+            <div class="item">
+              <strong>Database Administrator (Sports Dept)</strong>
+              <div class="small">Managed DB tasks and delivered secure data-handling practices in a university department.</div>
+            </div>
+            <div class="item">
+              <strong>Cybersecurity Intern / ShadowFox UI/UX Intern</strong>
+              <div class="small">Completed internships focused on pentesting best-practices and UI/UX for security tooling.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Publications & Talks</h2>
+          <ul class="clean">
+            <li>CTF write-ups and lab walkthroughs (available on GitHub / Blog — add link).</li>
+            <li>Campus workshops on cyber awareness and hands-on pentesting labs for college students.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Right column -->
+      <aside class="right-col">
+        <div class="card">
+          <h2>Skills</h2>
+          <div class="skills">
+            <div class="skill">Web Pentesting</div>
+            <div class="skill">CTF Design</div>
+            <div class="skill">Docker & DevOps</div>
+            <div class="skill">Linux & Bash</div>
+            <div class="skill">Burp Suite</div>
+            <div class="skill">SUID & PrivEsc</div>
+            <div class="skill">Steganography</div>
+            <div class="skill">Python</div>
+            <div class="skill">SQL & Databases</div>
+            <div class="skill">Networking & Recon</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Certifications & Education</h2>
+          <ul class="clean">
+            <li><strong>eJPT v2</strong> — Practical pentesting certification.</li>
+            <li><strong>Cybersecurity Internship — Completed</strong></li>
+            <li><strong>Selected:</strong> ShadowFox UI/UX Design Internship</li>
+            <li class="small">(Formal degree / school details — add here if you'd like them shown.)</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Contact</h2>
+          <p class="small">Let's collaborate on CTFs, pentesting labs, or security training.</p>
+          <div class="links">
+            <a class="btn" href="mailto:silent@example.com">Email</a>
+            <a class="ghost" href="#" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="ghost" href="#" target="_blank" rel="noopener">GitHub</a>
+            <a class="ghost" href="#" target="_blank" rel="noopener">Blog / Write-ups</a>
+          </div>
+
+          <div style="margin-top:12px">
+            <a class="ghost" href="#" target="_blank">Download CV (PDF)</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Quick Stats</h2>
+          <p class="small">
+            <span class="badge">CTFs created: 20+</span>
+            <span class="badge">Challenges: Beginner → Very Hard</span>
+            <span class="badge">Tools: Burp, Metasploit, Docker, GDB</span>
+          </p>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      Crafted by Silent (Kapil) — Cybersecurity | CTFs | Learning labs · Want edits? Tell me which parts to update (links, degree, resume).
+    </footer>
+  </div>
+</body>
+</html>
