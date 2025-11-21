@@ -13,9 +13,10 @@ Tasks:
 # Week 2: CSS Selectors, Styling, and Listd
 Objective: Apply styling using CSS selectors, color formats, and lists.
 Scenario: Apply a company style guide to a webpage.
+
 Tasks:
-3. Apply element, class, ID, attribute, pseudo-class, and pseudo-element selectors to an 'About Us' page.
+1. Apply element, class, ID, attribute, Pseudo-Class, and Pseudo-element selectors to an 'About Us' page.
    - Use HEX, RGB, RGBA, and HSL color formats.
    - Output: Styled About Us page with consistent colors.
-4. Create an unordered list of movies and style the favorite one uniquely.
-5. Create an ordered list of cities and apply custom random CSS.
+2. Create an unordered list of movies and style the favorite one uniquely.
+2. Create an ordered list of cities and apply custom random CSS.
