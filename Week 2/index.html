@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About Us — Kapil Patel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="site">
+    <header id="topbar" class="container">
+      <h1 class="brand">Silent <span class="subtle">(Kapil)</span></h1>
+      <nav>
+        <a href="#about" class="nav-link" data-ga="about-link">About</a>
+        <a href="#movies" class="nav-link" data-ga="movies-link">Movies</a>
+        <a href="#cities" class="nav-link" data-ga="cities-link">Cities</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section id="about" class="card about-card" lang="en">
+        <h2>About Us</h2>
+        <p class="lead">I’m <strong>Kapil Patel</strong>, a cybersecurity engineer and CTF creator. I design hands-on labs, Dockerized challenges, and teach practical pentesting skills.</p>
+        <p class="mission">Our mission: <span class="highlight">build learning-first security challenges</span> that teach exploitation, defensive thinking, and responsible disclosure.</p>
+        <p class="note">Tip: Hover the cards and links — interactive styles demonstrate pseudo-classes.</p>
+      </section>
+
+      <!-- Movies - unordered list -->
+      <section id="movies" class="card">
+        <h2>Favorite Movies</h2>
+        <p class="small">A short, styled unordered list. The favorite movie is specially highlighted.</p>
+        <ul class="movies-list" aria-label="movies list">
+          <li data-fav="false">The Matrix</li>
+          <li data-fav="false">Inception</li>
+          <li data-fav="true" class="favorite">The Prestige</li>
+          <li data-fav="false">Interstellar</li>
+          <li data-fav="false">The Social Network</li>
+        </ul>
+      </section>
+
+      <!-- Cities - ordered list with "random" custom styles -->
+      <section id="cities" class="card">
+        <h2>Top Cities I Recommend</h2>
+        <p class="small">An ordered list of cities with custom per-item styling (using nth-child rules).</p>
+        <ol class="cities-list">
+          <li>Amsterdam</li>
+          <li>Tokyo</li>
+          <li>San Francisco</li>
+          <li>Berlin</li>
+          <li>Bangalore</li>
+          <li>Lisbon</li>
+        </ol>
+      </section>
+
+      <!-- Footer / contact -->
+      <aside class="card contact-card">
+        <h3>Contact</h3>
+        <p class="small">Email me at <a href="mailto:silent@example.com" class="email-link" title="send email">silent@example.com</a></p>
+        <p class="small">Links <a href="#" target="_blank" rel="noopener" class="external">GitHub</a> · <a href="#" class="external">LinkedIn</a></p>
+      </aside>
+    </main>
+
+    <footer class="container footer">
+      <p>© <span id="year"></span> Silent (Kapil). Built with CSS selectors & color formats.</p>
+    </footer>
+  </div>
+
+  <script>
+    // tiny script just to set the footer year (keeps html static)
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
