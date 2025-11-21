@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FAQ slideToggle Fix</title>
+  <style>
+    body{ font-family: Arial, sans-serif; padding:20px; background:#f4f6f9; }
+    .faq-item{ background:#fff; border:1px solid #e6eef8; margin-bottom:8px; border-radius:6px; overflow:hidden; }
+    .faq-q{ padding:12px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+    .faq-a{ padding:12px; border-top:1px solid #eef2ff; display:none; } /* display:none is fine */
+    .chev{ transition: transform 200ms ease; }
+  </style>
+</head>
+<body>
+
+  <h2>FAQ demo</h2>
+
+  <div class="faq-item">
+    <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+      <span>What is jQuery?</span><span class="chev">▸</span>
+    </div>
+    <div class="faq-a">jQuery is a library that simplifies DOM manipulation and animations.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" tabindex="0" role="button" aria-expanded="false">
+      <span>How does slideToggle work?</span><span class="chev">▸</span>
+    </div>
+    <div class="faq-a">It animates the element's height to hide/show it smoothly.</div>
+  </div>
+
+  <!-- Load jQuery FIRST, then your script -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+  // Ensure DOM ready and that $ is available
+  $(function(){
+    // Use event delegation in case items are added dynamically
+    $(document).on('click', '.faq-q', function(){
+      const $q = $(this);
+      const $answer = $q.next('.faq-a');
+
+      // If you want accordion behavior: close others
+      $('.faq-a').not($answer).slideUp(200);
+      $('.faq-q').not($q).attr('aria-expanded','false').find('.chev').css('transform','rotate(0deg)');
+
+      // Toggle this answer
+      $answer.slideToggle(300);
+      const isOpen = $answer.is(':visible'); // note: this reads pre-toggle state; we'll toggle aria after animation
+      // After animation finishes, update chevron and aria
+      $answer.promise().done(function(){
+        const openNow = $answer.is(':visible');
+        $q.attr('aria-expanded', openNow ? 'true' : 'false');
+        $q.find('.chev').css('transform', openNow ? 'rotate(90deg)' : 'rotate(0deg)');
+      });
+    });
+
+    // Keyboard support
+    $(document).on('keydown', '.faq-q', function(e){
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        $(this).trigger('click');
+      }
+    });
+
+    // Debug helper: check jQuery loaded
+    if (typeof $ === 'undefined') {
+      console.error('jQuery not loaded!');
+      alert('jQuery did not load. Check CDN or network.');
+    } else {
+      console.log('jQuery loaded:', $.fn.jquery);
+    }
+  });
+  </script>
+</body>
+</html>
