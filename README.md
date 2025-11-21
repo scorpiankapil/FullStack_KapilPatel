@@ -107,7 +107,9 @@ Objective: Fetch and display data using APIs.
 Scenario: Build real-world API-driven apps.
 Tasks:
 24. Create a website where the user enters a country name and sees universities with their names, websites, and states (using fetch API).
-Week 11: Introduction to React & Components
+
+
+# Week 11: Introduction to React & Components
 Objective: Understand the fundamentals of React, JSX, and components.
 Scenario: You are building the front-end of a startup’s profile application.
 Tasks:
