@@ -7,5 +7,5 @@ Tasks:
    - Use <figure> and <figcaption> for the profile image.
    - Output: Clean, semantic HTML layout. 
 2. Create a timetable using <table>.
-   - Use <thead>, <tbody>, <tfoot>.  
+   - Use #<thead>, #<tbody>, #<tfoot>.  
    - Output: Neat academic timetable.
