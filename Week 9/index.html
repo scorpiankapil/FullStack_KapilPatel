@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>To-Do + Chessboard Demo</title>
+  <style>
+    :root{
+      --max-w:900px;
+      --accent:#2563eb;
+      --muted:#6b7280;
+      --success:#059669;
+      --danger:#ef4444;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body{
+      margin:16px;
+      background:#f8fafc;
+      color:#0f172a;
+      display:flex;
+      flex-direction:column;
+      gap:28px;
+      align-items:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:var(--max-w);
+      background:white;
+      border-radius:12px;
+      box-shadow:0 6px 16px rgba(15,23,42,0.06);
+      padding:18px;
+    }
+
+    /* To-Do styles */
+    .todo-header{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .todo-title{ font-size:1.25rem; font-weight:600; }
+    .todo-controls{ display:flex; gap:8px; align-items:center; }
+    .new-todo{
+      display:flex;
+      gap:8px;
+      margin-bottom:8px;
+    }
+    .new-todo input{
+      flex:1;
+      padding:8px 10px;
+      border-radius:8px;
+      border:1px solid #e6eef8;
+      outline:none;
+      font-size:0.95rem;
+    }
+    .btn{
+      background:var(--accent);
+      color:white;
+      border:none;
+      padding:8px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn:active{ transform:translateY(1px); }
+    .btn.ghost{ background:transparent; color:var(--accent); border:1px solid rgba(37,99,235,0.12); }
+
+    ul.todo-list{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    li.todo-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #f1f5f9;
+      background:linear-gradient(180deg,#ffffff,#fcfdff);
+    }
+
+    .todo-left{ display:flex; align-items:center; gap:10px; flex:1; min-width:0;}
+    .todo-left label{ display:flex; gap:10px; align-items:center; cursor:pointer; min-width:0;}
+    .todo-left input[type="checkbox"]{ width:18px; height:18px; }
+    .todo-text{ font-size:0.98rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .todo-text.completed{ text-decoration:line-through; color:var(--muted); opacity:0.8; }
+
+    .item-actions{ display:flex; gap:6px; align-items:center; }
+    .icon-btn{
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      padding:6px;
+      border-radius:8px;
+    }
+    .icon-btn:hover{ background:#f1f5f9; }
+
+    .small{ font-size:0.85rem; color:var(--muted); }
+
+    /* Chessboard container */
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:18px;
+      align-items:start;
+    }
+
+    @media (max-width:980px){
+      .two-col{ grid-template-columns: 1fr; }
+      .container{ padding:14px; }
+    }
+
+    /* small helper for chessboard */
+    .board-wrapper{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:center;
+    }
+    .coords{ font-size:0.9rem; color:var(--muted); }
+    #chess-board{
+      width:420px;
+      height:420px;
+      display:grid;
+      border-radius:8px;
+      overflow:hidden;
+      box-shadow:0 6px 14px rgba(2,6,23,0.08);
+    }
+  </style>
+</head>
+<body>
+  <div class="container two-col">
+    <!-- Left column: To-Do app -->
+    <div>
+      <div class="todo-header">
+        <div>
+          <div class="todo-title">Feature-rich To-Do List</div>
+          <div class="small">Move up / Move down / Delete / Checkbox / Persistent</div>
+        </div>
+        <div class="todo-controls">
+          <button id="clearAll" class="btn ghost">Clear all</button>
+        </div>
+      </div>
+
+      <div class="new-todo">
+        <input id="newTaskInput" type="text" placeholder="Add new task and press Enter or click Add..." aria-label="New task" />
+        <button id="addBtn" class="btn">Add</button>
+      </div>
+
+      <ul id="todoList" class="todo-list" aria-live="polite"></ul>
+      <div class="small" style="margin-top:10px;">Tip: Use Move Up / Move Down to reorder. Tasks saved to localStorage.</div>
+    </div>
+
+    <!-- Right column: Chessboard -->
+    <div class="container" style="padding:14px;">
+      <div class="todo-header" style="margin-bottom:6px;">
+        <div>
+          <div class="todo-title">Interactive Chessboard</div>
+          <div class="small">Generated with loops — styles applied via JavaScript</div>
+        </div>
+        <div class="todo-controls">
+          <button id="resetHighlight" class="btn ghost">Reset</button>
+        </div>
+      </div>
+
+      <div class="board-wrapper">
+        <div id="chess-board" role="grid" aria-label="8x8 chessboard"></div>
+        <div class="coords" id="squareInfo">Click a square to show its coordinate (e.g. a1)</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* -------------------------
+   To-Do App JS
+   Features:
+   - add item
+   - checkbox toggles completed
+   - move up / move down / delete
+   - persistence (localStorage)
+   - keyboard Enter to add
+--------------------------*/
+(function(){
+  const input = document.getElementById('newTaskInput');
+  const addBtn = document.getElementById('addBtn');
+  const listEl = document.getElementById('todoList');
+  const CLEAR_KEY = 'todo:items';
+
+  function load(){
+    try {
+      const raw = localStorage.getItem(CLEAR_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e) { return []; }
+  }
+  function save(items){
+    localStorage.setItem(CLEAR_KEY, JSON.stringify(items));
+  }
+
+  function createItemElement(item, index) {
+    const li = document.createElement('li');
+    li.className = 'todo-item';
+    li.dataset.index = index;
+
+    const left = document.createElement('div');
+    left.className = 'todo-left';
+
+    const label = document.createElement('label');
+
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.checked = !!item.done;
+    chk.setAttribute('aria-label', 'Mark task complete');
+
+    const span = document.createElement('div');
+    span.className = 'todo-text' + (item.done ? ' completed' : '');
+    span.textContent = item.text;
+    span.title = item.text;
+
+    label.appendChild(chk);
+    label.appendChild(span);
+    left.appendChild(label);
+
+    const actions = document.createElement('div');
+    actions.className = 'item-actions';
+
+    const moveUp = document.createElement('button');
+    moveUp.className = 'icon-btn';
+    moveUp.title = 'Move up';
+    moveUp.innerHTML = '⬆';
+
+    const moveDown = document.createElement('button');
+    moveDown.className = 'icon-btn';
+    moveDown.title = 'Move down';
+    moveDown.innerHTML = '⬇';
+
+    const del = document.createElement('button');
+    del.className = 'icon-btn';
+    del.title = 'Delete';
+    del.innerHTML = '🗑';
+
+    actions.appendChild(moveUp);
+    actions.appendChild(moveDown);
+    actions.appendChild(del);
+
+    li.appendChild(left);
+    li.appendChild(actions);
+
+    // events
+    chk.addEventListener('change', () => {
+      const items = load();
+      items[index].done = chk.checked;
+      save(items);
+      span.classList.toggle('completed', chk.checked);
+    });
+
+    del.addEventListener('click', () => {
+      const items = load();
+      items.splice(index,1);
+      save(items);
+      render();
+    });
+
+    moveUp.addEventListener('click', () => {
+      if (index === 0) return;
+      const items = load();
+      [items[index-1], items[index]] = [items[index], items[index-1]];
+      save(items);
+      render();
+    });
+
+    moveDown.addEventListener('click', () => {
+      const items = load();
+      if (index >= items.length-1) return;
+      [items[index+1], items[index]] = [items[index], items[index+1]];
+      save(items);
+      render();
+    });
+
+    // double-click to edit
+    span.addEventListener('dblclick', () => {
+      const newText = prompt('Edit task text:', item.text);
+      if (newText === null) return;
+      const items = load();
+      items[index].text = newText.trim() || items[index].text;
+      save(items);
+      render();
+    });
+
+    return li;
+  }
+
+  function render(){
+    const items = load();
+    listEl.innerHTML = '';
+    items.forEach((it, i)=> {
+      listEl.appendChild(createItemElement(it, i));
+    });
+  }
+
+  function addTask(text){
+    if (!text || !text.trim()) return;
+    const items = load();
+    items.push({ text: text.trim(), done:false });
+    save(items);
+    input.value = '';
+    render();
+    input.focus();
+  }
+
+  addBtn.addEventListener('click', ()=> addTask(input.value));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addTask(input.value);
+  });
+
+  document.getElementById('clearAll').addEventListener('click', () => {
+    if (!confirm('Clear all tasks?')) return;
+    localStorage.removeItem(CLEAR_KEY);
+    render();
+  });
+
+  // initial demo items if empty
+  if (!localStorage.getItem(CLEAR_KEY)) {
+    const demo = [
+      {text:'Finish report for team', done:false},
+      {text:'Practice JS: build chessboard', done:false},
+      {text:'Design CTF challenge idea', done:true}
+    ];
+    save(demo);
+  }
+  render();
+})();
+
+/* -------------------------
+   Chessboard JS
+   - Generates 8x8 board with loops
+   - Applies styles dynamically via JS
+   - Simple interactions: click highlights and shows square coordinate
+--------------------------*/
+(function(){
+  const board = document.getElementById('chess-board');
+  const info = document.getElementById('squareInfo');
+
+  const BOARD_SIZE = 8;
+  // Apply board grid styles via JS
+  board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 1fr)`;
+  board.style.gridTemplateRows = `repeat(${BOARD_SIZE}, 1fr)`;
+
+  // Create style rules dynamically for squares:
+  const style = document.createElement('style');
+  document.head.appendChild(style);
+  style.sheet.insertRule(`#chess-board .square{ display:flex; align-items:center; justify-content:center; font-weight:600; font-size:18px; user-select:none; }`, 0);
+  style.sheet.insertRule(`#chess-board .square:hover{ outline: 3px solid rgba(37,99,235,0.12); }`, 1);
+  style.sheet.insertRule(`#chess-board .square.selected{ box-shadow: inset 0 0 0 3px rgba(34,197,94,0.12), 0 8px 20px rgba(2,6,23,0.06); transform:scale(1.02); z-index:1; }`, 2);
+
+  // Coordinates mapping a-h and 1-8 (bottom to top in standard chess)
+  const files = ['a','b','c','d','e','f','g','h'];
+
+  function coordFromIndex(rankIdx, fileIdx){
+    // rankIdx 0..7 -> rank 8 .. 1 (top to bottom)
+    const rank = 8 - rankIdx;
+    const file = files[fileIdx];
+    return file + rank;
+  }
+
+  // clear previous
+  board.innerHTML = '';
+
+  for (let r = 0; r < BOARD_SIZE; r++){
+    for (let f = 0; f < BOARD_SIZE; f++){
+      const sq = document.createElement('div');
+      sq.className = 'square';
+      sq.dataset.rank = 8 - r;
+      sq.dataset.file = files[f];
+      sq.dataset.coord = coordFromIndex(r,f);
+      sq.setAttribute('role','gridcell');
+      sq.setAttribute('tabindex','0');
+
+      // color: light/dark by (r+f) parity
+      const isDark = (r + f) % 2 === 1;
+      // apply styles directly via JS (requirement)
+      sq.style.background = isDark ? '#3b3f46' : '#f3f4f6';
+      sq.style.color = isDark ? '#f8fafc' : '#0f172a';
+      sq.style.width = '100%';
+      sq.style.height = '100%';
+      sq.style.boxSizing = 'border-box';
+      sq.style.cursor = 'pointer';
+
+      // display coordinate small in corner (optional)
+      const coordEl = document.createElement('div');
+      coordEl.style.position = 'absolute';
+      coordEl.style.fontSize = '11px';
+      coordEl.style.opacity = '0.75';
+      coordEl.style.top = '6px';
+      coordEl.style.left = '6px';
+      coordEl.textContent = sq.dataset.coord;
+
+      // For accessibility, show a center text when clicked
+      const center = document.createElement('div');
+      center.textContent = ''; // we'll not show pieces by default
+
+      sq.style.position = 'relative';
+      sq.appendChild(coordEl);
+      sq.appendChild(center);
+
+      // click handler
+      sq.addEventListener('click', () => {
+        // remove selected class from others
+        const prev = board.querySelector('.square.selected');
+        if (prev) prev.classList.remove('selected');
+        sq.classList.add('selected');
+        info.textContent = `Selected square: ${sq.dataset.coord} — rank ${sq.dataset.rank}, file ${sq.dataset.file}`;
+      });
+
+      // keyboard support
+      sq.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sq.click();
+        }
+      });
+
+      board.appendChild(sq);
+    }
+  }
+
+  // Reset button
+  document.getElementById('resetHighlight').addEventListener('click', ()=>{
+    const prev = board.querySelector('.square.selected');
+    if (prev) prev.classList.remove('selected');
+    info.textContent = 'Click a square to show its coordinate (e.g. a1)';
+  });
+
+})();
+</script>
+</body>
+</html>
