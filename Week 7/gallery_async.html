@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Week 7 — Gallery, Events & Async JS (Simulated)</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;color:#111}
+    body{max-width:900px;margin:28px auto;padding:18px}
+    h1{font-size:1.25rem;margin:0 0 12px}
+    .gallery{display:grid;grid-template-columns:1fr 240px;gap:18px}
+    .main{border:1px solid #ddd;border-radius:8px;padding:12px;display:flex;flex-direction:column;align-items:center;min-height:320px}
+    .main img{max-width:100%;max-height:280px;border-radius:6px}
+    .thumbs{border:1px solid #eee;padding:12px;border-radius:8px;background:#fafafa}
+    .thumbs .list{display:flex;flex-direction:column;gap:8px}
+    .thumb{display:flex;gap:10px;align-items:center;cursor:pointer;padding:6px;border-radius:6px}
+    .thumb:hover{background:#fff}
+    .thumb img{width:56px;height:40px;object-fit:cover;border-radius:4px}
+    .caption{margin-top:10px;font-size:0.95rem;color:#333}
+    .meta{margin-top:12px;font-size:0.85rem;color:#666}
+    .loading{font-weight:600;color:#0a58ca}
+    pre.response{background:#111;color:#0f0;padding:12px;border-radius:6px;overflow:auto;max-height:180px}
+    button.retry{margin-top:8px;padding:8px 10px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1>Week 7 — Event Handling, Gallery & Async JS (Simulation)</h1>
+  <p>Objective: thumbnails update the main image using <code>addEventListener</code> + event delegation. Data is fetched (simulated) with Promises + <code>setTimeout</code>.</p>
+
+  <div class="gallery">
+    <section class="main" aria-live="polite">
+      <div id="mainContainer">
+        <div id="loading" class="loading">Loading gallery...</div>
+        <!-- main image + caption will be injected here -->
+      </div>
+      <div class="meta" id="metaArea"></div>
+    </section>
+
+    <aside class="thumbs">
+      <strong>Thumbnails (click one)</strong>
+      <div id="thumbList" class="list" role="list" aria-label="Thumbnails">
+        <!-- thumbnails will be injected here using simulated server data -->
+      </div>
+      <div style="margin-top:12px">
+        <button id="retry" class="retry" hidden>Retry fetch</button>
+      </div>
+    </aside>
+  </div>
+
+  <h3 style="margin-top:20px">Simulated server response</h3>
+  <pre id="serverResponse" class="response">(waiting for response)</pre>
+
+  <script>
+    // ---------- Simulated server fetch function ----------
+    function fetchGalleryFromServer(simulateFail = false) {
+      // Simulated server payload
+      const serverData = {
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        images: [
+          { id: 1, title: 'Golden Gate Bridge', url: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1200&q=60&auto=format&fit=crop' },
+          { id: 2, title: 'Misty Mountains', url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=60&auto=format&fit=crop' },
+          { id: 3, title: 'Desert Dunes', url: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=1200&q=60&auto=format&fit=crop' },
+          { id: 4, title: 'Forest Path', url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=60&auto=format&fit=crop' }
+        ]
+      };
+
+      return new Promise((resolve, reject) => {
+        // simulate network latency
+        setTimeout(() => {
+          if (simulateFail) {
+            reject({ status: 'error', message: 'Simulated network error' });
+          } else {
+            resolve(JSON.parse(JSON.stringify(serverData))); // return copy
+          }
+        }, 1400); // 1.4s delay
+      });
+    }
+
+    // ---------- DOM helpers ----------
+    const loadingEl = document.getElementById('loading');
+    const thumbList = document.getElementById('thumbList');
+    const mainContainer = document.getElementById('mainContainer');
+    const serverResponsePre = document.getElementById('serverResponse');
+    const metaArea = document.getElementById('metaArea');
+    const retryBtn = document.getElementById('retry');
+
+    // Render main image + caption
+    function renderMain(image) {
+      mainContainer.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = image.url;
+      img.alt = image.title;
+      img.loading = 'eager';
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+      caption.textContent = image.title;
+      mainContainer.appendChild(img);
+      mainContainer.appendChild(caption);
+      metaArea.textContent = `Image ID: ${image.id} • Loaded at: ${new Date().toLocaleTimeString()}`;
+    }
+
+    // Render thumbnails using event delegation (no per-thumb listeners)
+    function populateThumbnails(images) {
+      thumbList.innerHTML = ''; // clear
+      images.forEach(img => {
+        const item = document.createElement('div');
+        item.className = 'thumb';
+        item.setAttribute('role', 'listitem');
+        item.dataset.id = img.id;
+        item.dataset.url = img.url;
+        item.dataset.title = img.title;
+
+        item.innerHTML = `
+          <img src="${img.url}&w=200&h=120&fit=crop" alt="${img.title} thumbnail">
+          <span>${img.title}</span>
+        `;
+
+        thumbList.appendChild(item);
+      });
+    }
+
+    // Delegated click handler
+    thumbList.addEventListener('click', (ev) => {
+      // Find closest .thumb (delegation)
+      const thumb = ev.target.closest('.thumb');
+      if (!thumb) return; // click outside any thumb
+      const img = {
+        id: thumb.dataset.id,
+        url: thumb.dataset.url,
+        title: thumb.dataset.title
+      };
+      // Update main image
+      renderMain(img);
+      // show a small simulated server-response message
+      console.log('Thumbnail clicked — requested image id:', img.id);
+    });
+
+    // Initial fetch & display logic
+    function loadGallery(simulateFail = false) {
+      loadingEl.hidden = false;
+      loadingEl.textContent = 'Loading gallery...';
+      serverResponsePre.textContent = '(waiting for response)';
+      retryBtn.hidden = true;
+
+      fetchGalleryFromServer(simulateFail)
+        .then(response => {
+          // Display server response in preformatted block (simulated server response)
+          serverResponsePre.textContent = JSON.stringify(response, null, 2);
+
+          // Populate thumbnails and show first image in main area
+          populateThumbnails(response.images);
+          if (response.images.length) {
+            renderMain(response.images[0]);
+          }
+        })
+        .catch(err => {
+          serverResponsePre.textContent = JSON.stringify(err, null, 2);
+          loadingEl.textContent = 'Failed to load gallery.';
+          retryBtn.hidden = false;
+        })
+        .finally(() => {
+          // Remove loading text if main image is rendering
+          setTimeout(() => {
+            loadingEl.hidden = true;
+          }, 300);
+        });
+    }
+
+    // Retry button
+    retryBtn.addEventListener('click', () => loadGallery(false));
+
+    // Start: simulate a successful fetch
+    loadGallery(false);
+
+    // Uncomment the line below to simulate a failed fetch and test retry behavior.
+    // setTimeout(() => loadGallery(true), 0);
+  </script>
+</body>
+</html>
